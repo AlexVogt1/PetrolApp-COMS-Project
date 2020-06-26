@@ -117,7 +117,7 @@ public class SignUp extends AppCompatActivity {
         list = new ArrayList<>(Arrays.asList(allTheUsers.split(","))); // converts the single string of usernames into an Arraylist
         checkUsernameAvailability();
     }
-
+  //this method below checks whether or not the username the user has entered is taken by another user
     private void checkUsernameAvailability(){
         String username = textInputUsername.getEditText().getText().toString().trim();
 
@@ -178,7 +178,6 @@ public class SignUp extends AppCompatActivity {
   * it will check if the field entered by the user is empty
   * it will check if the username entered does not succeed 15 characters, this was done to ensure that users
   * do not use overly complicated and long usernames that are hard for them to remember
-  * Then it will also check if the username the user entered is already taken by another user.
   * If any of the requirements are not met a relevant error message will be displayed to the user
   * and a false value will be returned, but if they are all met a true value will be returned*/
     private boolean validateUsername() {

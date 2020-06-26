@@ -191,7 +191,6 @@ public class Login extends AppCompatActivity {
      * it will check if the field entered by the user is empty
      * it will check if the username entered does not succeed 15 characters, this was done to ensure that users
      * do not use overly complicated and long usernames that are hard for them to remember
-     * Then it will also check if the username the user entered is already taken by another user.
      * If any of the requirements are not met a relevant error message will be displayed to the user
      * and a false value will be returned, but if they are all met a true value will be returned*/
     private boolean validateUsername(){
@@ -292,9 +291,7 @@ public class Login extends AppCompatActivity {
 
   /* then this the confirm button is clicked it will run the okhttp request methods and thus the security checking as well as do basic user input validation */
     public void confirmInput(View v){
-
         getAllUsers();
-
         if(!validateEmail() | !validateUsername() | !validatePassword()){
             return;
         }else{
