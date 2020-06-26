@@ -92,7 +92,7 @@ public class SecutityQuestions extends AppCompatActivity {
             c.fetchInfo(SecutityQuestions.this, "SecQuestions",params, new RequestHandler() {
                 @Override
                 public void processResponse(String response) {
-                    System.out.println("Insertion was successful");
+
                     gotoLogin();
                 }
             });

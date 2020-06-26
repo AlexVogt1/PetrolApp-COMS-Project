@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.regex.Pattern;
 
@@ -45,7 +46,9 @@ public class Forgot_password extends AppCompatActivity {
     private TextInputLayout textInputUsername;
     private TextInputLayout textInputPassword;
     private TextInputLayout textInputConfirmPassword;
+    private ArrayList<String> list;
     private String SecInfo ="";
+    private ArrayList<String> SecIn;
     public String allTheUsers= "";
 
     Connection c=new Connection("https://lamp.ms.wits.ac.za/home/s2143116/");
@@ -103,13 +106,23 @@ public class Forgot_password extends AppCompatActivity {
     public void processUserNames(String json) throws JSONException {
         JSONArray jsonArray = new JSONArray(json);
         String users ="";
-        ArrayList<String> userNames= new ArrayList<String>();
-        for (int i = 0 ;i<jsonArray.length(); i++ ){
+        String temp = "";
+
+        for (int i = 0 ;i<jsonArray.length()-1; i++ ){
             JSONObject item = jsonArray.getJSONObject(i);
             users = users +item.getString("USERNAME")+",";
         }
-        allTheUsers =allTheUsers+ users;
+
+        JSONObject last = jsonArray.getJSONObject(jsonArray.length()-1);
+        temp = temp + last.getString("USERNAME");
+
+        allTheUsers =users + temp;
+        list = new ArrayList<>(Arrays.asList(allTheUsers.split(","))); // converts the single string of usernames into an Arraylist
+
     }
+
+    //this method below checks whether or not the username the user has entered is taken by another user
+
 
     /* this method validates the username entered by the user
      * it will check if the field entered by the user is empty
@@ -127,10 +140,7 @@ public class Forgot_password extends AppCompatActivity {
         } else if (username.length() > 15) {
             textInputUsername.setError("Username is to long");
             return false;
-        } else if(!allTheUsers.contains(username)){
-            textInputUsername.setError("Please Enter a Valid Username");
-            return false;
-        }else {
+        } else {
             textInputUsername.setError(null);
             return true;
         }
@@ -207,6 +217,10 @@ public class Forgot_password extends AppCompatActivity {
         String passwordInput = textInputPassword.getEditText().getText().toString().trim();
         String confirmPasswordInput = textInputConfirmPassword.getEditText().getText().toString().trim();
 
+
+
+
+
         if (confirmPasswordInput.isEmpty()){
             textInputConfirmPassword.setError("Field can't be empty");
             return false;
@@ -258,7 +272,7 @@ public class Forgot_password extends AppCompatActivity {
         c.fetchInfo(Forgot_password.this, "ForgotPassword",params, new RequestHandler() {
             @Override
             public void processResponse(String response) {
-                System.out.println("Insertion was successful");
+
                 try {
                     processSecQuestions(response);
                 } catch (JSONException e) {
@@ -287,8 +301,10 @@ public class Forgot_password extends AppCompatActivity {
         }
 
         SecInfo = SecInfo + username+","+answer1+","+answer2+","+answer3;
+        SecIn = new ArrayList<>(Arrays.asList(SecInfo.split(",")));
+
         checkSecQuestions();
-        System.out.println(SecInfo);
+
 
     }
 
@@ -298,19 +314,28 @@ public class Forgot_password extends AppCompatActivity {
         String petName = textinputPetName.getEditText().getText().toString().trim().toLowerCase();
         String streetName = textinputStreetName.getEditText().getText().toString().trim().toLowerCase();
 
-        if(!SecInfo.contains(petName)){
-            textinputPetName.setError("Pet Name is Incorrect");
-            System.out.println("answer1 ");
+        String username = textInputUsername.getEditText().getText().toString().trim();
+
+        if(!list.contains(username)){
+            textInputUsername.setError("This username is taken, please use a different one");
             return;
-        }else if(!SecInfo.contains(maidenName)){
-            textinputMaidenName.setError("Maiden Name is Incorrect");
-            return;
-        }else if(!SecInfo.contains(streetName)){
-            textinputStreetName.setError("Street Name is Incorrect");
-            return;
-        }else{
-            UpdatePassword(); // only if the security questions are correct for the username provided, will the that users password and salt be updated
+        }else if(list.contains(username)){
+            if(!SecIn.contains(petName)){
+                textinputPetName.setError("Pet Name is Incorrect");
+                return;
+            }else if(!SecIn.contains(maidenName)){
+                textinputMaidenName.setError("Maiden Name is Incorrect");
+                return;
+            }else if(!SecIn.contains(streetName)){
+                textinputStreetName.setError("Street Name is Incorrect");
+                return;
+            }else{
+                UpdatePassword(); // only if the security questions are correct for the username provided, will the that users password and salt be updated
+            }
+
         }
+
+
     }
 
   /*when all the security questions are corred for the username, will this method be run to update and change that usenames' password*/
@@ -333,9 +358,7 @@ public class Forgot_password extends AppCompatActivity {
         params.put("PASSWORD",hashedInput);
         params.put("SALT",salt);
 
-        System.out.println(username);
-        System.out.println(hashedInput);
-        System.out.println(salt);
+
 
 
         c.fetchInfo(Forgot_password.this, "UpdatePassword",params, new RequestHandler() {
