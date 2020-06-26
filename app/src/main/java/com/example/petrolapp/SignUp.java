@@ -190,10 +190,7 @@ public class SignUp extends AppCompatActivity {
         } else if (username.length() > 15) {
             textInputUsername.setError("Username is to long");
             return false;
-        } else if(allTheUsers.contains(username)){
-            textInputUsername.setError("This username is taken, please use a different one");
-            return false;
-        }else {
+        } else {
             textInputUsername.setError(null);
             return true;
         }

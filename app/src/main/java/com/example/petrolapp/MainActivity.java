@@ -33,8 +33,4 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void openForgotPassword(){
-        Intent intent = new Intent(this,SignUp.class);
-        startActivity(intent);
-    }
 }

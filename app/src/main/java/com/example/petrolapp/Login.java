@@ -65,7 +65,7 @@ public class Login extends AppCompatActivity {
         textInputEmail = findViewById(R.id.text_input_email);
         textInputUsername = findViewById(R.id.text_input_username);
         textInputPassword = findViewById(R.id.text_input_Password);
-        hashTextOutput = findViewById(R.id.hashOutput);
+
         userInfo = "";
         userSalt ="";
         getAllUsers();
@@ -307,6 +307,11 @@ public class Login extends AppCompatActivity {
 
         Intent intent = new Intent(this,Success.class);
         intent.putExtra("USERNAME", username);
+        startActivity(intent);
+    }
+
+    public void gotoforgotpassword(View V){
+        Intent intent = new Intent(this,Forgot_password.class);
         startActivity(intent);
     }
 

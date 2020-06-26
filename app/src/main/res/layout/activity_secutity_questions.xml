@@ -34,7 +34,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="what was your mothers maiden name?"
+        android:text="What was your mothers maiden name?"
         android:textSize="16dp"/>
 
     <com.google.android.material.textfield.TextInputLayout
